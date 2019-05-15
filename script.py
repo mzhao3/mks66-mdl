@@ -61,19 +61,27 @@ def run(filename):
                 cs = stack
             else:
                 cs = command['cs']
-            print(cs)
 
-            if command['constants'] == None:
-                const = ".white"
-            else:
-                const = command['constants']
+            if command['constants']:
+                if command['constants'] == None:
+                    const = ".white"
+                else:
+                    const = command['constants']
 
-
+            #     #blue green and red are not in the right order
+            #     areflect = [symbols[const][1][x][0] for x in symbols[const][1]]
+            #     dreflect = [symbols[const][1][x][1] for x in symbols[const][1]]
+            #     sreflect = [symbols[const][1][x][2] for x in symbols[const][1]]
+            #
+            # #print(areflect)
+            # #print(dreflect)
+            # #print(sreflect)
             add_sphere(tmp,
                        float(args[0]), float(args[1]), float(args[2]),
                        float(args[3]), step_3d)
             matrix_mult( cs[-1], tmp )
-            draw_polygons(tmp, screen, zbuffer, view, ambient, light, areflect, dreflect, sreflect)
+            #print(screen)
+            draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, const)
             #split constants into a, s, d
             #constants name kar kdr ksr kag kdg ksg kab kdb ksb [r] [g] [b]
 
