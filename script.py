@@ -86,7 +86,12 @@ def run(filename):
             #constants name kar kdr ksr kag kdg ksg kab kdb ksb [r] [g] [b]
 
             polygons = []
+        if op == 'box':
+            pass
+        if op == 'torus':
+            pass
 
+            
         if op == 'push':
             stack.append( [x[:] for x in stack[-1]] )
         if op == 'pop':
