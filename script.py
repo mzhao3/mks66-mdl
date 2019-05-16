@@ -56,42 +56,83 @@ def run(filename):
             matrix_mult( stack[-1], t )
             stack[-1] = [ x[:] for x in t]
 
+        if op == 'rotate':
+            theta = float(args[1]) * (math.pi / 180)
+            if args[0] == 'x':
+                t = make_rotX(theta)
+            elif args[0] == 'y':
+                t = make_rotY(theta)
+            else:
+                t = make_rotZ(theta)
+            matrix_mult( stack[-1], t )
+            stack[-1] = [ x[:] for x in t]
+        if op == 'scale':
+            t = make_scale(float(args[0]), float(args[1]), float(args[2]))
+            matrix_mult( stack[-1], t )
+            stack[-1] = [ x[:] for x in t]
+        if op == 'line':
+            add_edge( tmp,
+                      float(args[0]), float(args[1]), float(args[2]),
+                      float(args[3]), float(args[4]), float(args[5]) )
+            matrix_mult( cs[-1], tmp )
+            draw_lines(tmp, screen, zbuffer, color)
+            tmp = []
         if op == 'sphere':
             if command['cs'] == None:
                 cs = stack
             else:
                 cs = command['cs']
 
-            if command['constants']:
-                if command['constants'] == None:
-                    const = ".white"
-                else:
-                    const = command['constants']
 
-            #     #blue green and red are not in the right order
-            #     areflect = [symbols[const][1][x][0] for x in symbols[const][1]]
-            #     dreflect = [symbols[const][1][x][1] for x in symbols[const][1]]
-            #     sreflect = [symbols[const][1][x][2] for x in symbols[const][1]]
-            #
-            # #print(areflect)
-            # #print(dreflect)
-            # #print(sreflect)
+            if command['constants'] == None:
+                const = ".white"
+            else:
+                const = command['constants']
+
+
             add_sphere(tmp,
                        float(args[0]), float(args[1]), float(args[2]),
                        float(args[3]), step_3d)
             matrix_mult( cs[-1], tmp )
             #print(screen)
             draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, const)
-            #split constants into a, s, d
-            #constants name kar kdr ksr kag kdg ksg kab kdb ksb [r] [g] [b]
 
-            polygons = []
+            tmp = []
         if op == 'box':
-            pass
-        if op == 'torus':
-            pass
+            if command['cs'] == None:
+                cs = stack
+            else:
+                cs = command['cs']
 
-            
+            if command['constants'] == None:
+                const = ".white"
+            else:
+                const = command['constants']
+            add_box(tmp,
+                    float(args[0]), float(args[1]), float(args[2]),
+                    float(args[3]), float(args[4]), float(args[5]))
+            matrix_mult( cs[-1], tmp )
+            draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, const)
+            tmp = []
+        if op == 'torus':
+            if command['cs'] == None:
+                cs = stack
+            else:
+                cs = command['cs']
+
+
+            if command['constants'] == None:
+                const = ".white"
+            else:
+                const = command['constants']
+            add_torus(tmp,
+                      float(args[0]), float(args[1]), float(args[2]),
+                      float(args[3]), float(args[4]), step_3d)
+            matrix_mult( cs[-1], tmp )
+            draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, const)
+            tmp = []
+
+
         if op == 'push':
             stack.append( [x[:] for x in stack[-1]] )
         if op == 'pop':
